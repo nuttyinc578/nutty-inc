@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneOS Downloads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="downloads">
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="badge">WSL first</span>
+        <span>OneOS</span>
+      </div>
+      <nav class="nav">
+        <a data-nav="home" href="index.html">Home</a>
+        <a data-nav="downloads" href="downloads.html">Downloads</a>
+        <a data-nav="docs" href="docs.html">Docs</a>
+        <a data-nav="community" href="index.html#community">Community</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn secondary" href="https://github.com/nutty-inc/oneos" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn primary" href="docs.html">Build docs</a>
+      </div>
+      <button class="mobile-toggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Downloads</p>
+          <h1>Build a clean OneOS tarball, then import to WSL.</h1>
+          <p class="lede">Everything you need to assemble, verify, and import OneOS. Choose the path that fits your workflow: run the script locally, or pipe it via <code>curl</code>.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#quick">Quick commands</a>
+            <a class="btn secondary" href="https://github.com/nutty-inc/oneos/releases" target="_blank" rel="noreferrer">Releases</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Standard build (recommended)</div>
+          <pre class="code-block"><code>sudo apt update && sudo apt install -y debootstrap xz-utils
+sudo bash oneos/build-oneos.sh
+
+# Import on Windows (PowerShell)
+wsl --import OneOS <installDir> oneos.tar.gz --version 2
+# e.g., $env:USERPROFILE\OneOS or C:\\OneOS
+wsl -d OneOS</code></pre>
+          <p class="meta">Set variables like <code>ONEOS_RELEASE</code>, <code>ONEOS_MIRROR</code>, or <code>ONEOS_PACKAGES</code> before running to customize.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quick">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Pick your path</p>
+          <h2>Run locally or fetch via curl.</h2>
+          <p class="lede">Use the local script for trusted builds, or pipe over HTTPS when you need a quick bootstrap.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-header">Local script</div>
+            <p class="card-subtitle">Keeps everything on your machine.</p>
+            <pre class="code-block"><code>sudo apt install -y debootstrap xz-utils
+sudo bash oneos/build-oneos.sh</code></pre>
+            <p class="meta">Outputs <code>oneos.tar.gz</code> in the repo root.</p>
+          </div>
+          <div class="card">
+            <div class="card-header">Curl + bash</div>
+            <p class="card-subtitle">Great for cloud or automation runners.</p>
+            <pre class="code-block"><code>curl -fsSL https://raw.githubusercontent.com/nutty-inc/oneos/main/oneos/build-oneos.sh \
+ | sudo bash</code></pre>
+            <p class="meta">Respects env vars such as <code>ONEOS_RELEASE</code>, <code>ONEOS_MIRROR</code>, and <code>ONEOS_PACKAGES</code>.</p>
+          </div>
+          <div class="card">
+            <div class="card-header">Customize</div>
+            <p class="card-subtitle">Add packages or change mirrors.</p>
+            <pre class="code-block"><code>ONEOS_RELEASE=bookworm \
+ONEOS_PACKAGES="git curl ca-certificates" \
+ONEOS_TARBALL=oneos-bookworm.tar.gz \
+sudo bash oneos/build-oneos.sh</code></pre>
+            <p class="meta">Keep the tarball on a Windows path (e.g., <code>C:\\OneOS</code>) before importing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="verify">
+      <div class="container split-grid">
+        <div>
+          <div class="section-heading">
+            <p class="eyebrow">Verify &amp; share</p>
+            <h2>Integrity checks for your exports.</h2>
+            <p class="lede">Generate checksums before sharing tarballs with teammates. Keep your exports in a safe Windows path to avoid WSL-specific path issues.</p>
+          </div>
+          <div class="card">
+            <div class="card-header">Checksum locally</div>
+            <pre class="code-block"><code>sha256sum oneos.tar.gz > oneos.tar.gz.sha256
+cat oneos.tar.gz.sha256</code></pre>
+            <p class="meta">Store the checksum alongside the archive you distribute.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Import reminders</h3>
+          <ul class="list-inline">
+            <li>Pick an install directory like <code>C:\\OneOS</code> or <code>$env:USERPROFILE\\OneOS</code> when running <code>wsl --import</code>.</li>
+            <li>Avoid importing directly from <code>\\wsl$</code> shares.</li>
+            <li>Rebuild periodically and re-import for fresh bases.</li>
+          </ul>
+          <div class="notice">If you automate builds, publish checksums and the exact env vars you used so others can reproduce the export.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="after-import">
+      <div class="container split-grid">
+        <div class="section-heading">
+          <p class="eyebrow">After import</p>
+          <h2>Keep your WSL instance healthy.</h2>
+          <p class="lede">Once OneOS is imported, keep it patched and rebuild occasionally to refresh the base image.</p>
+        </div>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Update packages</td>
+                <td><code>sudo apt update && sudo apt upgrade</code></td>
+              </tr>
+              <tr>
+                <td>Install extras</td>
+                <td><code>sudo apt install &lt;pkg&gt;</code> or rebuild with <code>ONEOS_PACKAGES</code></td>
+              </tr>
+              <tr>
+                <td>Rebuild base</td>
+                <td><code>sudo bash oneos/build-oneos.sh</code> then re-import</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="meta">Document any extra packages you add so you can replicate them during the next rebuild.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">OneOS</div>
+        <p>A minimal, customizable WSL-first Linux base you can rebuild anytime.</p>
+        <p>Crafted by the OneOS community. Contributions welcome.</p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos">GitHub</a></li>
+          <li><a href="oneos/README.md">Build docs</a></li>
+          <li><a href="oneos/build-oneos.sh">Build script</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos/issues">Issue tracker</a></li>
+          <li><a href="mailto:hello@oneos.org">hello@oneos.org</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
