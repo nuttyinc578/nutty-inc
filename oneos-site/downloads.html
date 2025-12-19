@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneOS Downloads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">OneOS</div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="index.html#features">Features</a>
+        <a class="active" href="downloads.html">Downloads</a>
+        <a href="docs.html">Docs</a>
+      </nav>
+      <a class="btn ghost" href="https://github.com/nutty-inc/oneos" target="_blank" rel="noreferrer">Source</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero muted">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Downloads</p>
+          <h1>Build or fetch a clean OneOS rootfs for WSL.</h1>
+          <p class="lede">Follow the official recipe to assemble a Debian-based archive, then import it with <code>wsl --import</code>. Configure mirrors, releases, and packages when you need to tailor the image.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="oneos/build-oneos.sh">Download build script</a>
+            <a class="btn ghost" href="oneos/README.md">Review build docs</a>
+          </div>
+          <div class="meta">Default build targets Debian bookworm, ships with sudo + apt, and compresses to <code>oneos.tar.gz</code>.</div>
+        </div>
+        <div class="card">
+          <div class="card-header">Quick build + import</div>
+          <pre class="code-block"><code>sudo apt update \
+  && sudo apt install -y debootstrap xz-utils \
+  && sudo bash oneos/build-oneos.sh
+
+# import into WSL
+wsl --import OneOS $env:USERPROFILE\OneOS oneos.tar.gz --version 2
+wsl -d OneOS</code></pre>
+          <p class="card-footer">Prefer piping? <code>curl -fsSL https://oneos.org/oneos/build-oneos.sh | sudo bash</code></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Choose your path</p>
+          <h2>Pick a preset or customize the archive.</h2>
+          <p class="lede">Start from the stable defaults or tweak the bootstrap knobs to match your workflow.</p>
+        </div>
+        <div class="grid two-col">
+          <div class="card">
+            <h3>Stable defaults</h3>
+            <p>Minimal Debian bookworm image ready for WSL import.</p>
+            <ul class="bullet-list">
+              <li>Includes <code>sudo</code>, <code>apt</code>, and sensible locale/timezone defaults.</li>
+              <li>Produces <code>oneos.tar.gz</code> at the repo root after running the script.</li>
+              <li>Best for fresh workspaces or CI runners that need a predictable base.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Customize the build</h3>
+            <p>Override environment variables to tune the archive:</p>
+            <ul class="bullet-list">
+              <li><code>ONEOS_RELEASE</code> – pick a Debian suite (e.g., <code>bookworm</code>, <code>bullseye</code>).</li>
+              <li><code>ONEOS_MIRROR</code> – point to your preferred Debian mirror.</li>
+              <li><code>ONEOS_PACKAGES</code> – add packages at bootstrap time (e.g., <code>git</code>, <code>ca-certificates</code>).</li>
+              <li><code>ONEOS_TARBALL</code> – change the exported archive name.</li>
+            </ul>
+            <p class="meta">See <code>oneos/README.md</code> for every flag and example.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section muted">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">WSL import</p>
+          <h2>Use the tarball anywhere you sign in.</h2>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <h3>Copy the archive to Windows</h3>
+              <p>Move <code>oneos.tar.gz</code> to your Windows filesystem (e.g., <code>$env:USERPROFILE\\OneOS</code>).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <h3>Import into WSL</h3>
+              <p>Run <code>wsl --import OneOS $env:USERPROFILE\\OneOS oneos.tar.gz --version 2</code> from PowerShell or Windows Terminal.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <h3>Start your instance</h3>
+              <p>Launch with <code>wsl -d OneOS</code>, then create users, install dotfiles, or rebuild whenever you need a fresh base.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Integrity and portability</p>
+          <h2>Validate archives and share safely.</h2>
+          <p class="lede">Keep your imported environments trustworthy when downloading or distributing OneOS tarballs.</p>
+        </div>
+        <div class="grid two-col">
+          <div class="card">
+            <h3>Verify locally</h3>
+            <p>Generate a checksum beside the archive and compare before importing:</p>
+            <pre class="code-block"><code>sha256sum oneos.tar.gz > oneos.tar.gz.sha256
+sha256sum -c oneos.tar.gz.sha256</code></pre>
+            <p class="meta">Rebuild and refresh checksums whenever you regenerate the tarball.</p>
+          </div>
+          <div class="card">
+            <h3>Share within your team</h3>
+            <p>Store the tarball in your artifact registry or on a network share. Keep the checksum file next to it so teammates can validate what they pull down.</p>
+            <p>For automated pipelines, publish <code>oneos.tar.gz</code> after the build job and import it in downstream steps.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="logo">OneOS</div>
+        <p class="footer-text">A minimal, customizable WSL-first Linux base you can rebuild anytime.</p>
+        <p class="footer-text">Crafted by the OneOS community. Contributions welcome.</p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos">GitHub</a></li>
+          <li><a href="oneos/README.md">Build docs</a></li>
+          <li><a href="oneos/build-oneos.sh">Build script</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos/issues">Issue tracker</a></li>
+          <li><a href="mailto:hello@oneos.org">hello@oneos.org</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
