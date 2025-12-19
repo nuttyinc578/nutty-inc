@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneOS Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="docs">
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="badge">WSL first</span>
+        <span>OneOS</span>
+      </div>
+      <nav class="nav">
+        <a data-nav="home" href="index.html">Home</a>
+        <a data-nav="downloads" href="downloads.html">Downloads</a>
+        <a data-nav="docs" href="docs.html">Docs</a>
+        <a data-nav="community" href="index.html#community">Community</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn secondary" href="https://github.com/nutty-inc/oneos" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn primary" href="downloads.html">Download</a>
+      </div>
+      <button class="mobile-toggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Documentation</p>
+          <h1>Build, import, customize, and maintain OneOS.</h1>
+          <p class="lede">Follow the build guide, understand every environment variable, and learn how to keep your WSL instances healthy over time.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="oneos/README.md">Open build guide</a>
+            <a class="btn secondary" href="oneos/build-oneos.sh">View build script</a>
+          </div>
+          <div class="tag-list">
+            <span class="tag">Debootstrap</span>
+            <span class="tag">WSL</span>
+            <span class="tag">Reproducible</span>
+            <span class="tag">Customizable</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">At a glance</div>
+          <ul class="link-list">
+            <li><a href="#getting-started">Getting started</a></li>
+            <li><a href="#customization">Customization flags</a></li>
+            <li><a href="#wsl">WSL operations</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+          <p class="meta">The documentation below links directly to the repo so you can dive into source.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="getting-started">
+      <div class="container split-grid">
+        <div class="section-heading">
+          <p class="eyebrow">Start here</p>
+          <h2>Build a OneOS tarball.</h2>
+          <p class="lede">Use a Debian/Ubuntu host with <code>debootstrap</code> available. The script handles the rest.</p>
+        </div>
+        <div class="card">
+          <div class="card-header">Steps</div>
+          <ol class="list-muted">
+            <li>Install prerequisites: <code>sudo apt update && sudo apt install -y debootstrap xz-utils</code>.</li>
+            <li>Run the script: <code>sudo bash oneos/build-oneos.sh</code>.</li>
+            <li>Locate the tarball (defaults to <code>oneos.tar.gz</code> in the repo root).</li>
+            <li>Transfer it to a Windows path (e.g., <code>C:\\OneOS</code>).</li>
+            <li>Import into WSL: <code>wsl --import OneOS C:\\OneOS oneos.tar.gz --version 2</code>.</li>
+          </ol>
+          <p class="meta">See <a href="oneos/README.md">oneos/README.md</a> for the full build guide.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="customization">
+      <div class="container split-grid">
+        <div>
+          <div class="section-heading">
+            <p class="eyebrow">Tune the build</p>
+            <h2>Environment variables you can set.</h2>
+            <p class="lede">Control mirrors, release, and package footprint without editing the script.</p>
+          </div>
+          <ul class="list-inline">
+            <li><code>ONEOS_RELEASE</code> – Debian suite (e.g., <code>bookworm</code>).</li>
+            <li><code>ONEOS_MIRROR</code> – Choose a nearby Debian mirror.</li>
+            <li><code>ONEOS_PACKAGES</code> – Additional packages installed during bootstrap.</li>
+            <li><code>ONEOS_TARBALL</code> – Name for the exported archive.</li>
+          </ul>
+          <p class="meta">All variables are documented in <a href="oneos/README.md">oneos/README.md</a>.</p>
+        </div>
+        <div class="card">
+          <div class="card-header">Example: dev-ready build</div>
+          <pre class="code-block"><code>ONEOS_RELEASE=bookworm \
+ONEOS_PACKAGES="git ca-certificates curl" \
+ONEOS_MIRROR=https://deb.debian.org/debian \
+sudo bash oneos/build-oneos.sh</code></pre>
+          <p class="meta">Ideal for developers who want Git and TLS tooling already installed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="wsl">
+      <div class="container split-grid">
+        <div class="section-heading">
+          <p class="eyebrow">Operate &amp; maintain</p>
+          <h2>Keep your WSL instances healthy.</h2>
+          <p class="lede">Update packages regularly, rebuild when needed, and track any customizations you add after import.</p>
+        </div>
+        <div class="card">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Update packages</td>
+                <td><code>sudo apt update && sudo apt upgrade</code></td>
+              </tr>
+              <tr>
+                <td>Install a package</td>
+                <td><code>sudo apt install &lt;package&gt;</code></td>
+              </tr>
+              <tr>
+                <td>Rebuild from source</td>
+                <td><code>sudo bash oneos/build-oneos.sh</code> then re-import</td>
+              </tr>
+              <tr>
+                <td>Change mirrors</td>
+                <td>Set <code>ONEOS_MIRROR</code> and rebuild for faster updates.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="meta">Document your additions so you can replay them after rebuilding.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="faq">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">FAQ</p>
+          <h2>Answers to common questions.</h2>
+        </div>
+        <div class="faq">
+          <details open>
+            <summary>Why build instead of downloading a pre-made image?</summary>
+            <p>Building keeps the image transparent and reproducible. You choose mirrors, packages, and release, then verify with checksums before sharing.</p>
+          </details>
+          <details>
+            <summary>Which hosts are supported for building?</summary>
+            <p>Use Debian or Ubuntu hosts with <code>debootstrap</code> available. Other distributions can work if <code>debootstrap</code> is installed and configured.</p>
+          </details>
+          <details>
+            <summary>How do I update an existing OneOS instance?</summary>
+            <p>Inside WSL, run <code>sudo apt update && sudo apt upgrade</code>. For a fresh base, rebuild the tarball and re-import.</p>
+          </details>
+          <details>
+            <summary>Can I add a desktop environment?</summary>
+            <p>OneOS targets terminal-centric workflows. You can install GUI components after import, but the base image stays minimal to keep WSL fast.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">OneOS</div>
+        <p>A minimal, customizable WSL-first Linux base you can rebuild anytime.</p>
+        <p>Crafted by the OneOS community. Contributions welcome.</p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos">GitHub</a></li>
+          <li><a href="oneos/README.md">Build docs</a></li>
+          <li><a href="oneos/build-oneos.sh">Build script</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul class="link-list">
+          <li><a href="https://github.com/nutty-inc/oneos/issues">Issue tracker</a></li>
+          <li><a href="mailto:hello@oneos.org">hello@oneos.org</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
