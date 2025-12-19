@@ -54,7 +54,8 @@
 sudo bash oneos/build-oneos.sh
 
 # Import into WSL (PowerShell)
-wsl --import OneOS $env:USERPROFILE\OneOS oneos.tar.gz --version 2
+wsl --import OneOS <installDir> oneos.tar.gz --version 2
+# e.g., $env:USERPROFILE\OneOS or C:\\OneOS
 wsl -d OneOS</code></pre>
           <p class="meta">Use env vars like <code>ONEOS_RELEASE</code> and <code>ONEOS_PACKAGES</code> to change the base release and package set.</p>
         </div>
@@ -120,7 +121,7 @@ wsl -d OneOS</code></pre>
               <div class="step-number">3</div>
               <div>
                 <h3>Import into WSL</h3>
-                <p>In PowerShell: <code>wsl --import OneOS $env:USERPROFILE\OneOS oneos.tar.gz --version 2</code>, then start with <code>wsl -d OneOS</code>.</p>
+                <p>In PowerShell: <code>wsl --import OneOS &lt;installDir&gt; oneos.tar.gz --version 2</code> (choose a folder like <code>$env:USERPROFILE\\OneOS</code>), then start with <code>wsl -d OneOS</code>.</p>
               </div>
             </div>
             <div class="step">
@@ -175,7 +176,7 @@ sudo bash oneos/build-oneos.sh</code></pre>
             <tbody>
               <tr>
                 <td>Import</td>
-                <td><code>wsl --import OneOS C:\\OneOS oneos.tar.gz --version 2</code></td>
+                <td><code>wsl --import OneOS &lt;installDir&gt; oneos.tar.gz --version 2</code> (e.g., <code>C:\\OneOS</code>)</td>
               </tr>
               <tr>
                 <td>Set default user</td>

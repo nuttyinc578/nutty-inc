@@ -48,7 +48,8 @@
 sudo bash oneos/build-oneos.sh
 
 # Import on Windows (PowerShell)
-wsl --import OneOS $env:USERPROFILE\OneOS oneos.tar.gz --version 2
+wsl --import OneOS <installDir> oneos.tar.gz --version 2
+# e.g., $env:USERPROFILE\OneOS or C:\\OneOS
 wsl -d OneOS</code></pre>
           <p class="meta">Set variables like <code>ONEOS_RELEASE</code>, <code>ONEOS_MIRROR</code>, or <code>ONEOS_PACKAGES</code> before running to customize.</p>
         </div>
@@ -108,7 +109,7 @@ cat oneos.tar.gz.sha256</code></pre>
         <div class="card">
           <h3>Import reminders</h3>
           <ul class="list-inline">
-            <li>Keep the tarball on <code>C:\\</code> before running <code>wsl --import</code>.</li>
+            <li>Pick an install directory like <code>C:\\OneOS</code> or <code>$env:USERPROFILE\\OneOS</code> when running <code>wsl --import</code>.</li>
             <li>Avoid importing directly from <code>\\wsl$</code> shares.</li>
             <li>Rebuild periodically and re-import for fresh bases.</li>
           </ul>
