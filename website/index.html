@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pnb connect router</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">nutty'inc · pnb connect router</div>
+      <div class="chip" aria-label="Tor-backed routing">
+        <span>Tor-transparent VPN</span>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badges">
+        <span class="chip">Transparent proxy</span>
+        <span class="chip">iptables automation</span>
+        <span class="chip">Quick setup</span>
+      </div>
+      <h1>Create a Tor-backed VPN-style gateway in minutes</h1>
+      <p>pnb connect router installs Tor, enables IP forwarding, and sets NAT rules so your host (and optional LAN) route outbound traffic through the Tor network.</p>
+      <div class="actions">
+        <a class="button" href="../docs/pnb-connect-router.md">Read the full guide</a>
+        <a class="button secondary" href="../scripts/pnb-connect-setup.sh">View the setup script</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <h2>What you get</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Tor transparent proxy</h3>
+          <p>Tor listens on <code>9040</code> (TransPort) and <code>9053</code> (DNSPort), redirecting TCP and DNS traffic while mapping virtual addresses for non-exit-friendly destinations.</p>
+        </article>
+        <article class="card">
+          <h3>Hardened defaults</h3>
+          <p>Firewall rules exempt Tor's own traffic, drop leaks, and persist via <code>iptables-persistent</code>, keeping the gateway online after reboots.</p>
+        </article>
+        <article class="card">
+          <h3>LAN friendly</h3>
+          <p>Enable IP forwarding and optionally NAT a downstream interface so multiple devices can share Tor-backed egress.</p>
+        </article>
+        <article class="card">
+          <h3>Reversible changes</h3>
+          <p>The existing <code>torrc</code> is backed up on first run, letting you revert if you need to restore prior settings.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="grid">
+      <h2>Quick start</h2>
+      <div class="steps">
+        <div class="step">
+          <strong>1) Inspect the script</strong>
+          <p>Review <code>scripts/pnb-connect-setup.sh</code> to understand the iptables and Tor settings.</p>
+        </div>
+        <div class="step">
+          <strong>2) Run as root</strong>
+          <p>Pass the interfaces you want to use. The script defaults to <code>eth0</code> for WAN.</p>
+          <pre><code>sudo EXTERNAL_IFACE=eth0 INTERNAL_IFACE=eth1 \
+  scripts/pnb-connect-setup.sh</code></pre>
+        </div>
+        <div class="step">
+          <strong>3) Verify Tor</strong>
+          <p>Ensure Tor is healthy and that your egress IP is a Tor exit.</p>
+          <pre><code>systemctl status tor
+curl --socks5 localhost:9050 https://check.torproject.org/api/ip</code></pre>
+        </div>
+        <div class="step">
+          <strong>4) Optional LAN config</strong>
+          <p>Assign your LAN interface an address and DHCP so downstream clients use this host's gateway and DNS.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <h2>Safety notes</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>Understand Tor limits</h3>
+          <p>Traffic leaving Tor exits can be deanonymized by malicious operators. Always prefer HTTPS and review your threat model.</p>
+        </article>
+        <article class="card">
+          <h3>Review firewall rules</h3>
+          <p>iptables rules redirect TCP SYN packets and DNS queries to Tor. Validate the rules before production use.</p>
+        </article>
+        <article class="card">
+          <h3>Test in staging</h3>
+          <p>Try the setup on a lab host first. Confirm routing and DNS behave as expected for your applications.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Built for operators who need Tor-backed routing fast. See the repo README for context.
+  </footer>
+</body>
+</html>
